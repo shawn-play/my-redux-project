@@ -7,23 +7,17 @@ import Footer from '../components/Footer';
 
 class App extends Component {
 	render() {
-		const { dispatch, visibleTodos, visibilityFunc } = this.props;
+		const { addTodo, toggleTodo, setVisibility, visibleTodos, visibilityFunc } = this.props;
 		return (
             <div>
                 <AddTodo
-                    onAddClick={text =>
-                    	dispatch(addTodo(text))
-                    } />
+                    onAddClick={addTodo} />
                 <TodoList
                     todos={visibleTodos}
-					onTodoClick={index =>
-					    dispatch(toggleTodo(index))
-				    } />
+					onTodoClick={toggleTodo} />
 				<Footer
 				    filter={visibilityFunc}
-				    onFilterChange={nextFilter =>
-				       dispatch(setVisibility(nextFilter))
-				       } />
+				    onFilterChange={setVisibility} />
             </div>
 		)
 	}
@@ -60,4 +54,11 @@ function select(state) {
 	}
 }
 
-export default connect(select)(App)
+function dispatcher(dispatch) {
+    return {
+    	addTodo: (text) => dispatch(addTodo(text)),
+    	toggleTodo: (index) => dispatch(toggleTodo(index)),
+    	setVisibility: (nextFilter) => dispatch(setVisibility(nextFilter))
+    }
+}
+export default connect(select, dispatcher)(App)
